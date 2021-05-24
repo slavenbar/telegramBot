@@ -1,3 +1,13 @@
+import telepot
+import urllib3
+
+proxy_url = "http://proxy.server:3128"
+telepot.api._pools = {
+    'default': urllib3.ProxyManager(proxy_url=proxy_url, num_pools=3, maxsize=10, retries=False, timeout=30),
+}
+telepot.api._onetime_pool_spec = (urllib3.ProxyManager, dict(proxy_url=proxy_url, num_pools=1, maxsize=1, retries=False, timeout=30))
+
+
 import requests
 import datetime
 from config import tg_bot_token, open_weather_token
@@ -6,7 +16,7 @@ from aiogram.dispatcher import Dispatcher
 from aiogram.utils import executor
 
 
-bot = Bot(token=tg_bot_token)
+bot = Bot(token=tg_bot_token, proxy=proxy_url)
 dp = Dispatcher(bot)
 
 
