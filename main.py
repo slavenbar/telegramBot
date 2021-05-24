@@ -1,7 +1,13 @@
+import time
+from time import gmtime, strftime
+from datetime import datetime,timezone,timedelta
 import requests
 import datetime
+#import reverse_geocoder as rg
 from pprint import pprint
 from config import open_weather_token
+
+from pytz import timezone
 
 #Код
 def get_weather(city, open_weather_token):
@@ -35,13 +41,29 @@ def get_weather(city, open_weather_token):
         humidity = data["main"]["humidity"]
         pressure = data["main"]["pressure"]
         wind = data["wind"]["speed"]
+        time_zone = datetime.datetime.fromtimestamp(data["timezone"])
         sunrise_timestamp = datetime.datetime.fromtimestamp(data["sys"]["sunrise"])
         sunset_timestamp = datetime.datetime.fromtimestamp(data["sys"]["sunset"])
         length_of_the_day = datetime.datetime.fromtimestamp(data["sys"]["sunset"]) - datetime.datetime.fromtimestamp(
             data["sys"]["sunrise"])
+        zone1 = str(time_zone)
+        zone2 = zone1.replace("-", " ")
+        zone3 = zone2.replace(":", " ")
+        zone4 = zone3.replace(" ", " ")
+        zone5 = [zone4[0:12]]
+        zone5.append(zone4[11:13])
+        zone5.append(zone4[14:19])
 
-        print(f"***{datetime.datetime.now().strftime('%Y-%m-%d %H:%M')}***\n"
-              f"Погода в городе: {city}\nТемпература: {cur_weather}C° {wd}\n"
+
+        print(zone5)
+        # Current time in UTC
+        now_utc = datetime.datetime.now(datetime.timezone.utc)
+        tm_rus = timezone('Europe/Moscow')
+        time_RU = now_utc.astimezone(tm_rus)
+        print("UTC Time: ", time_RU)
+        #print(f"***{datetime.datetime.now().strftime(f'%Y-%m-%d %H:%M')}***\n"
+        print(f"Погода в городе: {city}\nТемпература: {cur_weather}C° {wd}\n"
+              #f"Зона : {time_zone}\n"
               f"Влажность: {humidity}%\nДавление: {pressure} мм.рт.ст\nВетер: {wind} м/с\n"
               f"Восход солнца: {sunrise_timestamp}\nЗакат солнца: {sunset_timestamp}\nПродолжительность дня: {length_of_the_day}\n"
               f"Хорошего дня!"
