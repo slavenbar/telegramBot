@@ -42,6 +42,7 @@ def get_weather(city, open_weather_token):
 
         humidity = data["main"]["humidity"]
         pressure = data["main"]["pressure"]
+        country = data["sys"]["country"]
         wind = data["wind"]["speed"]
         time_zone = datetime.datetime.fromtimestamp(data["timezone"])
         sunrise_timestamp = datetime.datetime.fromtimestamp(data["sys"]["sunrise"])
@@ -84,7 +85,7 @@ def get_weather(city, open_weather_token):
 
 
         print(f"Дата: {datetime.datetime.now().strftime(f'%d-%m-%Y')}\n"
-              f"Погода в городе: {city}\nТемпература: {cur_weather}C° {wd}\n"
+              f"Страна: {country}\nПогода в городе: {city}\nТемпература: {cur_weather}C° {wd}\n"
               #f"Зона : {time_zone}\n"
               f"Влажность: {humidity}%\nДавление: {pressure} мм.рт.ст\nВетер: {wind} м/с\n"
               f"Восход солнца: {sunrise_timestamp}\nЗакат солнца: {sunset_timestamp}\nПродолжительность дня: {length_of_the_day}\n"
