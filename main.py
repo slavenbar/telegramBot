@@ -56,23 +56,48 @@ def get_weather(city, open_weather_token):
         zone5.append(zone4[14:16])
         zone5.append(zone4[17:19])
         dict_time = {}
-        dict_time["hour"] = int(zone5[1])
+        # dict_time["hour"] = int(zone5[1])
+        # dict_time["minutes"] = int(zone5[2])
+        plus_hours = datetime.datetime.now().strftime(f'%H')
+        plus_minutes = datetime.datetime.now().strftime(f'%M')
+        plus_hours = int(plus_hours)
+        main_time = int(zone5[1])
+        dict_time["hour"] = plus_hours + main_time
         dict_time["minutes"] = int(zone5[2])
 
-
-        print(dict_time)
-        # # Current time in UTC Правильное время
+        # # # Current time in UTC Правильное время
         # now_utc = datetime.datetime.now(datetime.timezone.utc)
         # tm_rus = timezone('Europe/Moscow')
         # time_RU = now_utc.astimezone(tm_rus)
         # print("UTC Time: ", time_RU)
+        if dict_time["hour"] > 23 and dict_time["hour"] > 10:
+            dict_time["hour"] = dict_time["hour"] - 24
+            if dict_time["hour"] > 23 and dict_time["hour"] > 10:
+                dict_time["hour"] = dict_time["hour"] - 24
+                print("Время: ", dict_time["hour"], ":", plus_minutes)
+
+        if dict_time["hour"] < 10:
+            dict_time["hour"] = str(dict_time["hour"])
+            dict_time["hour"] = "0" + dict_time["hour"]
+            print("Время: ", dict_time["hour"], ":", plus_minutes)
+        else:
+            print("Время: ", dict_time["hour"], ":", plus_minutes)
+
+        zone_sunrize = str(sunset_timestamp)
+        zone_sunrize = zone_sunrize.replace("-", " ")
+        zone_sunrize = zone_sunrize.replace(":", " ")
+        zone_sunrize2 = [zone_sunrize[0:12]]
+        zone_sunrize2.append(zone_sunrize[11:13])
+        zone_sunrize2.append(zone_sunrize[14:16])
+        zone_sunrize2.append(zone_sunrize[17:19])
+        print(zone_sunrize2)
+
         print(f"Дата: {datetime.datetime.now().strftime(f'%Y-%m-%d')}\n"
               f"Погода в городе: {city}\nТемпература: {cur_weather}C° {wd}\n"
               #f"Зона : {time_zone}\n"
               f"Влажность: {humidity}%\nДавление: {pressure} мм.рт.ст\nВетер: {wind} м/с\n"
               f"Восход солнца: {sunrise_timestamp}\nЗакат солнца: {sunset_timestamp}\nПродолжительность дня: {length_of_the_day}\n"
-              f"Хорошего дня!\n"
-              f"МСК: {datetime.datetime.now().strftime(f'%H:%M')}"
+              f"С вами был прогноз погоды!"
               )
 
     except Exception as ex:
