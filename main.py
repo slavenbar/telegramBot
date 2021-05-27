@@ -38,6 +38,8 @@ def get_weather(city, open_weather_token):
         else:
             wd = "Посмотри в окно, не пойму что там за погода!"
 
+                            ###--------ПАРАМЕТРЫ КОТОРЫЕ БУДЕМ ВЫЧИСЛЯТЬ--------###
+
         humidity = data["main"]["humidity"]
         pressure = data["main"]["pressure"]
         wind = data["wind"]["speed"]
@@ -47,6 +49,10 @@ def get_weather(city, open_weather_token):
         length_of_the_day = datetime.datetime.fromtimestamp(data["sys"]["sunset"]) - datetime.datetime.fromtimestamp(
             data["sys"]["sunrise"])
 
+        ###------ВРЕМЯ МОСКОВСКОЕ ПЛЮС ВРЕМЯ ПО ЗОНАМ--------#####
+###---ПЕРЕВОДИМ ЗНАЧЕНИЕ ВРЕМЕНИ ВЗЯТОЕ ИЗ DATETIME В СТРОКУ,УДАЛЯЕМ ЛИШНИЕ ЗНАКИ---###
+        ###---РАЗБИВАЕМ НА ЭЛЕМЕНТЫ,ДОБАВЛЯЕМ В СПИСОК---###
+        ###---ДОСТАЁМ ИЗ СПИСКА И ВЫВОДИМ ТОЛЬКО ЧАСЫ И МИНУТЫ---###
         zone1 = str(time_zone)
         zone2 = zone1.replace("-", " ")
         zone3 = zone2.replace(":", " ")
@@ -56,8 +62,6 @@ def get_weather(city, open_weather_token):
         zone5.append(zone4[14:16])
         zone5.append(zone4[17:19])
         dict_time = {}
-        # dict_time["hour"] = int(zone5[1])
-        # dict_time["minutes"] = int(zone5[2])
         plus_hours = datetime.datetime.now().strftime(f'%H')
         plus_minutes = datetime.datetime.now().strftime(f'%M')
         plus_hours = int(plus_hours)
@@ -65,11 +69,6 @@ def get_weather(city, open_weather_token):
         dict_time["hour"] = plus_hours + main_time
         dict_time["minutes"] = int(zone5[2])
 
-        # # # Current time in UTC Правильное время
-        # now_utc = datetime.datetime.now(datetime.timezone.utc)
-        # tm_rus = timezone('Europe/Moscow')
-        # time_RU = now_utc.astimezone(tm_rus)
-        # print("UTC Time: ", time_RU)
         if dict_time["hour"] > 23 and dict_time["hour"] > 10:
             dict_time["hour"] = dict_time["hour"] - 24
             if dict_time["hour"] > 23 and dict_time["hour"] > 10:
@@ -83,16 +82,8 @@ def get_weather(city, open_weather_token):
         else:
             print("Время: ", dict_time["hour"], ":", plus_minutes)
 
-        zone_sunrize = str(sunset_timestamp)
-        zone_sunrize = zone_sunrize.replace("-", " ")
-        zone_sunrize = zone_sunrize.replace(":", " ")
-        zone_sunrize2 = [zone_sunrize[0:12]]
-        zone_sunrize2.append(zone_sunrize[11:13])
-        zone_sunrize2.append(zone_sunrize[14:16])
-        zone_sunrize2.append(zone_sunrize[17:19])
-        print(zone_sunrize2)
 
-        print(f"Дата: {datetime.datetime.now().strftime(f'%Y-%m-%d')}\n"
+        print(f"Дата: {datetime.datetime.now().strftime(f'%d-%m-%Y')}\n"
               f"Погода в городе: {city}\nТемпература: {cur_weather}C° {wd}\n"
               #f"Зона : {time_zone}\n"
               f"Влажность: {humidity}%\nДавление: {pressure} мм.рт.ст\nВетер: {wind} м/с\n"
@@ -104,6 +95,11 @@ def get_weather(city, open_weather_token):
         print(ex)
         print("Проверьте название города")
 
+        # # # Current time in UTC Правильное время
+        # now_utc = datetime.datetime.now(datetime.timezone.utc)
+        # tm_rus = timezone('Europe/Moscow')
+        # time_RU = now_utc.astimezone(tm_rus)
+        # print("UTC Time: ", time_RU)
 
 def main():
     city = input("Введите город: ")
